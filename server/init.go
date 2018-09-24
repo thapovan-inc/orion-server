@@ -94,7 +94,6 @@ func StopHTTP() {
 		logger.Infoln("Gracefully stopping HTTP server")
 		ctx, _ := context.WithTimeout(context.Background(), 60*time.Second)
 		hServer.srv.Shutdown(ctx)
-		ctx.Done()
 		hServer.isRunning = false
 	}
 	logger.Infoln("Stopped HTTP Server")
