@@ -5,3 +5,4 @@ orion-server
 *.dll
 *.o
 *.out
+.idea/
