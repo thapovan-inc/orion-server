@@ -3,8 +3,11 @@ version: 2.0
 jobs:
   build:
     docker:
-    - image: circleci/golang:1.11-stretch
+      - image: circleci/golang:1.11-stretch
     working_directory: ~/orion-server
+    environment:
+      GOOS: linux
+      GOARCH: amd64
     steps:
     - checkout
     - run: sudo apt update && sudo apt install -y librdkafka-dev
@@ -15,15 +18,22 @@ jobs:
         paths:
           - orion-server
           - DockerFile
-#  push-image:
-#    docker:
-#    - image: circleci/golang:1.11-stretch
-#    steps:
-#    - attach_workspace:
-#        at: /orion-server
-#    -
+  push-image:
+    docker:
+    - image: circleci/golang:1.11-stretch
+    steps:
+    - attach_workspace:
+        at: ~/orion-server
+    - setup_remote_docker
+    - run: curl -fsSL get.docker.com -o /tmp/get-docker.sh
+    - run: sudo bash /tmp/get-docker.sh
+    - run: |
+        docker login -u $DOCKER_USER -p $DOCKER_PASS
+        docker build -t thapovan-inc/orion-server:latest .
+        docker push
 workflows:
   version: 2
   build-and-deploy:
     jobs:
       - build
+      - push-image
