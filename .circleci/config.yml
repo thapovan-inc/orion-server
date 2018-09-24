@@ -21,6 +21,7 @@ jobs:
   push-image:
     docker:
     - image: circleci/golang:1.11-stretch
+    working_directory: ~/orion-server
     steps:
     - attach_workspace:
         at: ~/orion-server
@@ -28,7 +29,7 @@ jobs:
     - run: curl -fsSL get.docker.com -o /tmp/get-docker.sh
     - run: sudo bash /tmp/get-docker.sh
     - run: |
-        docker login -u $DOCKER_USER -p $DOCKER_PASS
+        echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
         docker build -t thapovan-inc/orion-server:latest .
         docker push
 workflows:
