@@ -28,11 +28,9 @@ jobs:
     - image: circleci/golang:1.11-stretch
     working_directory: ~/orion-server
     steps:
+    - setup_remote_docker
     - attach_workspace:
         at: ~/orion-server
-    - setup_remote_docker
-    - run: curl -fsSL get.docker.com -o /tmp/get-docker.sh
-    - run: sudo bash /tmp/get-docker.sh
     - run: |
         echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
         docker build -t thapovan-inc/orion-server:latest .
