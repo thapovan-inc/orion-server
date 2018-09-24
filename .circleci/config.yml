@@ -33,9 +33,9 @@ jobs:
     - attach_workspace:
         at: ~/orion-server
     - run: |
-        docker build -t thapovan-inc/orion-server:latest .
+        docker build -t thapovan/orion-server:latest .
         echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-        docker push thapovan-inc/orion-server:latest
+        docker push thapovan/orion-server:latest
         rm ~/.docker/config.json
 workflows:
   version: 2
