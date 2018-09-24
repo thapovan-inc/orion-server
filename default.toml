@@ -1,0 +1,23 @@
+[log]
+  level = "info" # Valid levels are debug, info, warn, error, panic. Defaults to info
+  format = "text" # Can be "text" or "json". Defaults to "text"
+  use_colors = true # Considered only when using "text" log format. Defaults to false
+[span_validation]
+  allowed_drift_ms = 300000
+  max_metadata_size_kb = 128
+[publisher]
+  type = "nats"
+  allow_backpressure = false
+  debug_stream = true # When set to true, span data is published as JSON to the topic incoming-request-json
+  [publisher.nats]
+    url = "nats://127.0.0.1:4222"
+    client_id = "orion-server"
+    cluster_id = "orion-cluster"
+  [publisher.kafka]
+    "client.id" = "orion-server.KafkaPublisher.dev"
+    "compression.type" = "none"
+    "bootstrap.servers" = "localhost:29092"
+    "queue.buffering.max.ms" = "2"
+    "go.produce.channel.size" = 1000
+    "go.batch.producer" = true
+    "go.delivery.reports" = false

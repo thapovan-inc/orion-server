@@ -1,0 +1,28 @@
+version: 2.0
+
+jobs:
+  build:
+    docker:
+    - image: circleci/golang:1.11-stretch
+    working_directory: /orion-server
+    steps:
+    - checkout
+    - run: go mod download
+    - run: go build -tags static -v
+    - persist_to_workspace:
+        root: /orion-server
+        paths:
+          - orion-server
+          - DockerFile
+#  push-image:
+#    docker:
+#    - image: circleci/golang:1.11-stretch
+#    steps:
+#    - attach_workspace:
+#        at: /orion-server
+#    -
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - build
