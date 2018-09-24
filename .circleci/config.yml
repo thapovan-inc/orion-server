@@ -40,4 +40,6 @@ workflows:
   build-and-deploy:
     jobs:
       - build
-      - push-image
+      - push-image:
+          requires:
+            - build
