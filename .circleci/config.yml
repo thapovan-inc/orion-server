@@ -23,6 +23,7 @@ jobs:
         paths:
           - orion-server
           - Dockerfile
+          - default.toml
   push-image:
     docker:
     - image: circleci/golang:1.11-stretch
