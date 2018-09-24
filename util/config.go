@@ -3,7 +3,6 @@ package util
 import (
 	"fmt"
 	"github.com/BurntSushi/toml"
-	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"io/ioutil"
 	"reflect"
 )
@@ -22,13 +21,6 @@ type LoggerConfig struct {
 	Level     string `toml:"level"`
 	Format    string `toml:"format"`
 	UseColors bool   `toml:"use_colors"`
-}
-
-type PublisherConfig struct {
-	Type                 string              `toml:"type"`
-	DebugStream          bool                `toml:"debug_stream"`
-	NatsPublisherConfig  NatsPublisherConfig `toml:"nats"`
-	KafkaPublisherConfig kafka.ConfigMap     `toml:"kafka"`
 }
 
 type NatsPublisherConfig struct {
