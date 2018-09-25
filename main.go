@@ -33,14 +33,14 @@ func main() {
 
 	err := publisher.InitSpanPublisherFromConfig()
 	if err != nil {
-		logger.Error(err)
+		logger.Sugar().Error(err)
 		os.Exit(1)
 	}
 	var wg sync.WaitGroup
-	logger.Infof("Starting gRPC server on port 20691")
+	logger.Info("Starting gRPC server on port 20691")
 	server.StartGRPC(20691)
 	wg.Add(1)
-	logger.Infof("Starting HTTP server on port 20691")
+	logger.Info("Starting HTTP server on port 20691")
 	server.StartHTTP(9017)
 	wg.Add(1)
 	defer func() {

@@ -1,6 +1,7 @@
 [log]
   level = "info" # Valid levels are debug, info, warn, error, panic. Defaults to info
-  format = "text" # Can be "text" or "json". Defaults to "text"
+  encoding = "console" # Can be "console" or "json". Defaults to "console"
+  output_paths = ["stdout"]
   use_colors = true # Considered only when using "text" log format. Defaults to false
 [span_validation]
   allowed_drift_ms = 300000

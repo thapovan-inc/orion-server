@@ -19,6 +19,7 @@ import (
 	"github.com/thapovan-inc/orion-server/publisher"
 	"github.com/thapovan-inc/orion-server/util"
 	"github.com/thapovan-inc/orionproto"
+	"go.uber.org/zap"
 	"strconv"
 	"strings"
 )
@@ -34,10 +35,10 @@ func ingestSpan(spanData *orionproto.Span, namespace string) error {
 		if err == nil && pub != nil {
 			targetTopic := "incoming-spans"
 			key := getKeyForSpanData(spanData, namespace)
-			logger.Debugln("Publishing data for key ", key)
+			logger.Debug("Publishing data", zap.String("key", key))
 			err = pub.PublishSpan(targetTopic, []byte(key), spanData)
 			if err != nil {
-				logger.WithError(err).Errorln("Error occurred when publishing to topic ", targetTopic)
+				logger.Error("Error occurred when publishing to topic ", zap.String("targeTopic", targetTopic), zap.Error(err))
 			} else {
 				return nil
 			}
@@ -45,7 +46,7 @@ func ingestSpan(spanData *orionproto.Span, namespace string) error {
 			if err == nil {
 				err = errors.New("publisher is nil")
 			}
-			logger.WithError(err).Errorln("Unable to grab a publisher")
+			logger.Error("Unable to grab a publisher", zap.Error(err))
 		}
 		message = "Internal server error has occured"
 	}

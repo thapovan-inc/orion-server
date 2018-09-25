@@ -45,7 +45,7 @@ func (grpcServer) UploadSpanBulk(context context.Context, request *orionproto.Bu
 			errorMessage = err.Error()
 		}
 	} else {
-		logger.Debugln("request.SpanData is empty")
+		logger.Debug("request.SpanData is empty")
 	}
 	return &orionproto.ServerResponse{Success: isSuccess, Code: "", Message: errorMessage}, nil
 }
@@ -55,7 +55,6 @@ func (httpServer) UploadSpanBulk(c *gin.Context) {
 	bulkRequest := &orionproto.BulkRequest{}
 	err := orionproto.JsonToProto(c.Request.Body, bulkRequest)
 	if err == nil {
-		logger.Debugln(*bulkRequest)
 		isSuccess := true
 		errorMessage := ""
 		if len(bulkRequest.SpanData) > 0 {
@@ -76,7 +75,7 @@ func (httpServer) UploadSpanBulk(c *gin.Context) {
 				errorMessage = err.Error()
 			}
 		} else {
-			logger.Debugln("request.SpanData is empty")
+			logger.Debug("request.SpanData is empty")
 		}
 		response, err := orionproto.ProtoToJson(&orionproto.ServerResponse{Success: isSuccess, Code: "", Message: errorMessage})
 		if err == nil {

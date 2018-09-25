@@ -15,6 +15,7 @@
 package server
 
 import (
+	"go.uber.org/zap"
 	"io"
 
 	"github.com/thapovan-inc/orion-server/authprovider"
@@ -28,14 +29,14 @@ func (grpcServer) UploadSpanStream(streamServer orionproto.Tracer_UploadSpanStre
 	for {
 		request, err := streamServer.Recv()
 		if err == io.EOF {
-			logger.Info("Stream EOF reached. Closing stream for namespace ", namespace)
+			logger.Info("Stream EOF reached. Closing stream for namespace ", zap.String("namespace", namespace))
 			return nil
 		}
 		controlReq := request.GetControlRequest()
 		if controlReq != nil {
 			switch controlReq.RequestType {
 			case orionproto.ControlRequest_END_STREAM:
-				logger.Info("End stream message received. Closing stream for namespace ", namespace)
+				logger.Info("End stream message received. Closing stream for namespace ", zap.String("namespace", namespace))
 				return nil
 			case orionproto.ControlRequest_AUTH:
 				namespace, err = authprovider.GetNameSpaceFromAuthToken(controlReq.GetJsonString())
@@ -50,7 +51,7 @@ func (grpcServer) UploadSpanStream(streamServer orionproto.Tracer_UploadSpanStre
 		} else {
 			spanData := request.GetSpanData()
 			if spanData == nil {
-				logger.Info("Empty span data received. Closing stream for namespace ", namespace)
+				logger.Info("Empty span data received. Closing stream for namespace ", zap.String("namespace", namespace))
 				response := &orionproto.ServerResponse{
 					Message: "Empty span received. Closing stream now.",
 				}

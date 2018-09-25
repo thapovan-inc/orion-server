@@ -17,12 +17,13 @@ package util
 import (
 	"fmt"
 	"github.com/BurntSushi/toml"
+	"go.uber.org/zap"
 	"io/ioutil"
 	"reflect"
 )
 
 type ServerConfig struct {
-	Logger          LoggerConfig         `toml:"log"`
+	Logger          zap.Config           `toml:"log"`
 	SpanValidation  SpanValidationConfig `toml:"span_validation"`
 	PublisherConfig PublisherConfig      `toml:"publisher"`
 	loaded          bool
@@ -31,11 +32,11 @@ type ServerConfig struct {
 type GeneralConfig struct {
 }
 
-type LoggerConfig struct {
-	Level     string `toml:"level"`
-	Format    string `toml:"format"`
-	UseColors bool   `toml:"use_colors"`
-}
+//type LoggerConfig struct {
+//	Level     string `toml:"level"`
+//	Format    string `toml:"format"`
+//	UseColors bool   `toml:"use_colors"`
+//}
 
 type NatsPublisherConfig struct {
 	URL       string `toml:"url"`

@@ -24,7 +24,7 @@ import (
 
 func (grpcServer) UploadSpan(context context.Context, request *orionproto.UnaryRequest) (*orionproto.ServerResponse, error) {
 	logger := util.GetLogger("server", "grpcServer::UploadSpan")
-	logger.Debugln(*request)
+	logger.Sugar().Debug(*request)
 	isSuccess := true
 	namespace := ""
 	var err error = nil
@@ -45,7 +45,7 @@ func (httpServer) UploadSpan(c *gin.Context) {
 	unaryRequest := &orionproto.UnaryRequest{}
 	err := orionproto.JsonToProto(c.Request.Body, unaryRequest)
 	if err == nil {
-		logger.Debugln(*unaryRequest)
+		logger.Sugar().Debug(*unaryRequest)
 		isSuccess := true
 		namespace := ""
 		var err error = nil

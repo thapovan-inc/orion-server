@@ -20,6 +20,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/thapovan-inc/orion-server/util"
 	"github.com/thapovan-inc/orionproto"
+	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 	"net"
@@ -43,7 +44,7 @@ func StartGRPC(port uint16) {
 	logger := util.GetLogger("server", "StartGRPC")
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
 	if err != nil {
-		logger.Fatalln("gRPC server failed to listen: ", err)
+		logger.Fatal("gRPC server failed to listen", zap.Error(err))
 	}
 	gServer = grpc.NewServer()
 	orionproto.RegisterTracerServer(gServer, grpcServer{})
@@ -52,16 +53,16 @@ func StartGRPC(port uint16) {
 	go func() {
 		if err := gServer.Serve(lis); err != nil {
 			gServer = nil
-			logger.Fatalf("gRPC server failed to start: %v", err)
+			logger.Fatal("gRPC server failed to start", zap.Error(err))
 		}
 	}()
-	logger.Infoln("gRPC server started and listening on port ", port)
+	logger.Info("gRPC server started and listening on port ", zap.Uint16("port", port))
 }
 
 func StopGRPC() {
 	logger := util.GetLogger("server", "StopGRPC")
 	if gServer != nil {
-		logger.Infoln("Gracefully stopping gRPC server")
+		logger.Info("Gracefully stopping gRPC server")
 		gServer.GracefulStop()
 	}
 	logger.Info("Stopped gRPC server")
@@ -82,7 +83,7 @@ func StartHTTP(port uint16) {
 		defer func() { hServer.isRunning = false }()
 		err := srv.ListenAndServe()
 		if err != nil {
-			logger.Fatalln("HTTP server failed to start: ", err)
+			logger.Fatal("HTTP server failed to start: ", zap.Error(err))
 		}
 	}()
 	hServer.isRunning = true
@@ -91,10 +92,10 @@ func StartHTTP(port uint16) {
 func StopHTTP() {
 	logger := util.GetLogger("server", "StopHTTP")
 	if hServer != nil {
-		logger.Infoln("Gracefully stopping HTTP server")
+		logger.Info("Gracefully stopping HTTP server")
 		ctx, _ := context.WithTimeout(context.Background(), 60*time.Second)
 		hServer.srv.Shutdown(ctx)
 		hServer.isRunning = false
 	}
-	logger.Infoln("Stopped HTTP Server")
+	logger.Info("Stopped HTTP Server")
 }

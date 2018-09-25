@@ -15,17 +15,17 @@
 package util
 
 import (
-	"github.com/sirupsen/logrus"
 	"go.uber.org/zap"
 )
 
-var logLevel logrus.Level
+var logger *zap.Logger
 
-func GetLogger(packageName, function string) *logrus.Entry {
-	return logrus.WithFields(logrus.Fields{
-		"PackageName": packageName,
-		"Function":    function,
-	})
+func GetLogger(packageName, function string) *zap.Logger {
+	if logger == nil {
+		SetupLoggerConfig()
+	}
+	l := logger.With(zap.String("package", packageName), zap.String("function", function))
+	return l
 }
 
 func GetZapLogger(packageName, function string) {
@@ -33,26 +33,12 @@ func GetZapLogger(packageName, function string) {
 }
 
 func SetupLoggerConfig() {
-	config := GetConfig().Logger
-	var err error
-	if config.Format != "json" {
-		shouldForceColors := config.UseColors
-		logrus.SetFormatter(&logrus.TextFormatter{ForceColors: shouldForceColors})
-	} else {
-		logrus.SetFormatter(&logrus.JSONFormatter{})
-	}
-	if config.Level != "" {
-		logLevel, err = logrus.ParseLevel(config.Level)
-		if err == nil {
-			logrus.SetLevel(logLevel)
-		}
-	}
-	if err != nil || config.Level == "" {
-		logger := GetLogger("util", "SetupLoggerConfig")
-		if err != nil {
-			logger = logger.WithError(err)
-		}
-		logger.Warn("Setting default log level to info")
-		logrus.SetLevel(logrus.InfoLevel)
-	}
+	//config := zap.NewDevelopmentConfig()
+	//fmt.Printf("%+v", config)
+	//l, err := config.Build()
+	//if err != nil {
+	//	fmt.Println(err)
+	//	panic(err)
+	//}
+	logger, _ = zap.NewDevelopment()
 }

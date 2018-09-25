@@ -65,7 +65,7 @@ func validateTimestamp(timestamp uint64) error {
 	maxDiff := util.GetConfig().SpanValidation.AllowedDrift
 	if +(int64(timestamp) - currentTimestamp) > maxDiff {
 		logger := util.GetLogger("server", "validateTimestamp")
-		logger.Errorf("Received timestamp %v, current timestamp %v, difference %v, maxAllowedDrift %v", timestamp, currentTimestamp, +(int64(timestamp) - currentTimestamp), maxDiff)
+		logger.Sugar().Errorf("Received timestamp %v, current timestamp %v, difference %v, maxAllowedDrift %v", timestamp, currentTimestamp, +(int64(timestamp) - currentTimestamp), maxDiff)
 		return fmt.Errorf("timestamp exceeds maximum allowed drift")
 	}
 	return nil

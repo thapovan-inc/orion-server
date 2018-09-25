@@ -19,6 +19,7 @@ package publisher
 import (
 	"fmt"
 	"github.com/thapovan-inc/orion-server/util"
+	"go.uber.org/zap"
 )
 
 func InitSpanPublisherFromConfig() error {
@@ -31,7 +32,7 @@ func InitSpanPublisherFromConfig() error {
 			debugStreamEnabled: serverConfig.PublisherConfig.DebugStream}
 		err := publisher.connect()
 		if err != nil {
-			logger.Debug(err)
+			logger.Error("Error when connecting to publisher", zap.Error(err))
 			return err
 		} else {
 			return nil

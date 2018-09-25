@@ -20,6 +20,7 @@ import (
 	"github.com/thapovan-inc/orion-server/util"
 	"github.com/thapovan-inc/orionproto"
 	"github.com/vmihailenco/msgpack"
+	"go.uber.org/zap"
 	"log"
 )
 
@@ -41,16 +42,16 @@ func (n *NatsPublisher) connect() error {
 	logger := util.GetLogger("publisher", "NatsPublisher::connect")
 	logger.Info("Connecting")
 	if n.URL == "" {
-		logger.Warn("nats URL not provided. Using default URL ", stan.DefaultNatsURL)
+		logger.Warn("nats URL not provided. Using default URL ", zap.String("default_url", stan.DefaultNatsURL))
 		n.URL = stan.DefaultNatsURL
 	}
 	nc, err := stan.Connect(n.ClusterID, n.ClientID, stan.NatsURL(n.URL), stan.SetConnectionLostHandler(func(conn stan.Conn, e error) {
-		logger.Errorf("Connection to nats server lost. Error: %v", e)
+		logger.Sugar().Errorf("Connection to nats server lost. Error: %v", e)
 		n.connected = false
 	}))
 	if err != nil {
 		n.connected = false
-		logger.Error("Error when trying to connect to nats server at ", n.URL)
+		logger.Sugar().Error("Error when trying to connect to nats server at ", n.URL)
 	} else {
 		n.nc = nc
 		n.connected = true
@@ -66,7 +67,7 @@ func (n *NatsPublisher) publishMessage(topic string, key, messageBytes []byte) e
 	logger := util.GetLogger("publisher", "NatsPublisher::publishMessage")
 	var err error
 	_, err = n.nc.PublishAsync(topic, messageBytes, func(rGuid string, e error) {
-		logger.Debugf("Published key %s to topic %s", string(key), topic)
+		logger.Sugar().Debugf("Published key %s to topic %s", string(key), topic)
 		if err != nil {
 			log.Fatalf("Received error when trying to publish key %s with guid %s to topic %s. Error: %v",
 				string(key), rGuid, topic, e)
@@ -86,7 +87,7 @@ func (n *NatsPublisher) Publish(topic string, key, value []byte) error {
 	}
 	messageBytes, err := msgpack.Marshal(&NatsMessage{Key: key, Value: value})
 	if err != nil {
-		logger.WithError(err).Errorln("Error when marshaling message")
+		logger.Sugar().Errorw("Error when marshaling message", zap.Error(err))
 		return err
 	}
 	return n.publishMessage(topic, key, messageBytes)
