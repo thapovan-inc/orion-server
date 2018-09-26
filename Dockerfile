@@ -1,5 +1,6 @@
 FROM scratch
 ADD orion-server /orion-server
 ADD default.toml /default.toml
-EXPOSE 9071,20691
+EXPOSE 9071/tcp
+EXPOSE 20691/tcp
 ENTRYPOINT ['/orion-server']
