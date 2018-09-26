@@ -1,3 +1,3 @@
 compile:
 	go mod download
-	go build -tags static -v
+	CGO_ENABLED=0 go build -tags static -v -a -installsuffix cgo

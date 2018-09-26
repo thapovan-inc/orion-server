@@ -8,6 +8,7 @@ jobs:
     environment:
       GOOS: linux
       GOARCH: amd64
+      CGO_ENABLED: 0
     steps:
     - checkout
     - run: sudo apt update && sudo apt install -y librdkafka-dev
@@ -17,7 +18,7 @@ jobs:
         paths:
           - ./vendor
         when: on_success
-    - run: go build -tags static -v
+    - run: go build -tags static -v -a -installsuffix cgo
     - persist_to_workspace:
         root: ~/orion-server
         paths:
