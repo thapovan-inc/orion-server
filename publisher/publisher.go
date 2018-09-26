@@ -20,8 +20,9 @@ import (
 )
 
 const (
-	KAFKA = "kafka"
-	NATS  = "nats"
+	KAFKA   = "kafka"
+	NATS    = "nats"
+	CONSOLE = "console"
 )
 
 type Publisher interface {

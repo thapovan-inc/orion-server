@@ -47,6 +47,10 @@ func InitSpanPublisherFromConfig() error {
 		} else {
 			return nil
 		}
+	case CONSOLE:
+		publisher = &consolePublisher{}
+		_ = publisher.connect()
+		return nil
 	default:
 		publisher = nil
 		return fmt.Errorf("unable to find publisher backend configuration")
