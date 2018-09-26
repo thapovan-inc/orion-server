@@ -24,8 +24,8 @@ func GetLogger(packageName, function string) *zap.Logger {
 	if logger == nil {
 		SetupLoggerConfig()
 	}
-	l := logger.With(zap.String("package", packageName), zap.String("function", function))
-	return l
+	//l := logger.With(zap.String("package", packageName), zap.String("function", function))
+	return logger
 }
 
 func GetZapLogger(packageName, function string) {
@@ -40,5 +40,7 @@ func SetupLoggerConfig() {
 	//	fmt.Println(err)
 	//	panic(err)
 	//}
-	logger, _ = zap.NewDevelopment()
+	config := zap.NewProductionConfig()
+	config.Level = GetConfig().Logger.Level
+	logger, _ = config.Build()
 }
