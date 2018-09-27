@@ -7,7 +7,7 @@
   allowed_drift_ms = 300000
   max_metadata_size_kb = 128
 [publisher]
-  type = "nats"
+  type = "console"
   allow_backpressure = false
   debug_stream = true # When set to true, span data is published as JSON to the topic incoming-request-json
   [publisher.nats]
