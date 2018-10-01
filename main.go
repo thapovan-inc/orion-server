@@ -24,6 +24,14 @@ import (
 )
 
 func main() {
+	fmt.Println(`
+   ____       _           
+  / __ \_____(_)___  ____ 
+ / / / / ___/ / __ \/ __ \
+/ /_/ / /  / / /_/ / / / /
+\____/_/  /_/\____/_/ /_/ 
+	
+	`)
 	fmt.Println("Loading config file from default.toml")
 	util.LoadConfigFromFile("default.toml")
 
