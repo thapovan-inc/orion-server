@@ -15,6 +15,7 @@
 package util
 
 import (
+	"fmt"
 	"go.uber.org/zap"
 )
 
@@ -28,10 +29,6 @@ func GetLogger(packageName, function string) *zap.Logger {
 	return logger
 }
 
-func GetZapLogger(packageName, function string) {
-	zap.NewProduction()
-}
-
 func SetupLoggerConfig() {
 	//config := zap.NewDevelopmentConfig()
 	//fmt.Printf("%+v", config)
@@ -41,6 +38,19 @@ func SetupLoggerConfig() {
 	//	panic(err)
 	//}
 	config := zap.NewProductionConfig()
-	config.Level = GetConfig().Logger.Level
+	switch GetConfig().Logger.LogLevel {
+	case "info":
+		config.Level = zap.NewAtomicLevelAt(zap.InfoLevel)
+	case "debug":
+		fmt.Println("setting level to debug")
+		config.Level = zap.NewAtomicLevelAt(zap.DebugLevel)
+	case "warn":
+		config.Level = zap.NewAtomicLevelAt(zap.WarnLevel)
+	default:
+		config.Level = zap.NewAtomicLevelAt(zap.ErrorLevel)
+
+	}
+	fmt.Println(config.Level.String())
 	logger, _ = config.Build()
+	logger.Sugar().Debug("Testing debug")
 }

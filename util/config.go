@@ -22,8 +22,13 @@ import (
 	"reflect"
 )
 
+type LoggerConfig struct {
+	zap.Config
+	LogLevel string `toml:"level"`
+}
+
 type ServerConfig struct {
-	Logger          zap.Config           `toml:"log"`
+	Logger          LoggerConfig         `toml:"log"`
 	SpanValidation  SpanValidationConfig `toml:"span_validation"`
 	PublisherConfig PublisherConfig      `toml:"publisher"`
 	loaded          bool
