@@ -4,7 +4,7 @@
   output_paths = ["stdout"]
   use_colors = true # Considered only when using "text" log format. Defaults to false
 [span_validation]
-  allowed_drift_ms = 300000
+  allowed_drift_ms = 300000000
   max_metadata_size_kb = 128
 [publisher]
   type = "console"
