@@ -63,7 +63,6 @@ func isValidUUID(uuid string) bool {
 
 func validateTimestamp(timestamp uint64) error {
 	logger := util.GetLogger("server", "validateTimestamp")
-	logger.Error("Entering validate")
 	currentTimestamp := time.Now().UnixNano() / 1000
 	maxDiff := util.GetConfig().SpanValidation.AllowedDrift
 	if int64(math.Abs(float64(timestamp)-float64(currentTimestamp))) > maxDiff {
