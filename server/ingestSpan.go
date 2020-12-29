@@ -39,6 +39,7 @@ func ingestSpan(spanData *orionproto.Span, namespace string) error {
 			err = pub.PublishSpan(targetTopic, []byte(key), spanData)
 			if err != nil {
 				logger.Error("Error occurred when publishing to topic ", zap.String("targeTopic", targetTopic), zap.Error(err))
+				message = err.Error()
 			} else {
 				return nil
 			}

@@ -43,7 +43,7 @@ func GetSpanPublisher() (SpanPublisher, error) {
 	if publisher == nil {
 		return nil, fmt.Errorf("publisher not yet initialized. Try publisher::InitPublisherConfig")
 	}
-	return publisher.(SpanPublisher), nil
+	return publisher, nil
 }
 
 func GetPublisher() (Publisher, error) {
